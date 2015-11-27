@@ -4,6 +4,7 @@ from random import random
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.uix.anchorlayout import AnchorLayout
+from kivy.uix.button import Button
 from kivy.graphics import Rectangle, Color #, Canvas
 from PylotsGame_class import PylotMap_class
 
@@ -28,19 +29,16 @@ class PG(Widget):
                     Rectangle(pos=(j.xplace * (self.squareSize + 1), j.yplace * (self.squareSize + 1)), size=(self.squareSize,self.squareSize))
 
     def findxplace(self, x):
-        for i in self.PM.matr:
-            for j in i:
-                if j.xplace * (self.squareSize + 1) < x < j.xplace * (self.squareSize + 1) + self.squareSize:
-                    return j.xplace
-            break # одного прохода достаточно
+        for i in range(self.PM.size):
+            if self.PM.matr[i][i].xplace * (self.squareSize + 1) < x < self.PM.matr[i][i].xplace * (self.squareSize + 1) + self.squareSize:
+                return self.PM.matr[i][i].xplace
         return -1
 
 
     def findyplace(self, y):
-        for i in self.PM.matr:
-            if i[0].yplace * (self.squareSize + 1) < y < i[0].yplace * (self.squareSize + 1) + self.squareSize:
-                    return i[0].yplace
-            break # одного прохода достаточно
+        for i in range(self.PM.size):
+            if self.PM.matr[i][i].yplace * (self.squareSize + 1) < y < self.PM.matr[i][i].yplace * (self.squareSize + 1) + self.squareSize:
+                return self.PM.matr[i][i].yplace
         return -1
 
 
@@ -50,21 +48,32 @@ class PG(Widget):
         if (xplace >= 0) and (yplace >=0):
             self.PM.invert(xplace,yplace)
         self.redraw()
+        if self.PM.congratulation():
+            self.makesometext()
+
+    def makesometext(self):
+        print("You won!")
 
 
 class PylotsGameApp(App):
     def build(self):
         fieldSize = 300
-        mwiget = AnchorLayout(size=(fieldSize, fieldSize))
+        mwiget = AnchorLayout(anchor_x='center', anchor_y='top')
+        menu = AnchorLayout(anchor_x='left', anchor_y='top')
+        gm = AnchorLayout(anchor_x='center', anchor_y='center')
         colortop = (random(), random(), random())
         colorbottom = (random(), random(), random())
         game = PG()
         game.fill(4,colortop,colorbottom,fieldSize)
-        mwiget.add_widget(game)
+        gm.add_widget(game)
+
+        btn = Button(text='New')
+        menu.add_widget(btn)
+
+        mwiget.add_widget(menu)
+        mwiget.add_widget(gm)
 
 
-        #btn = Button(text='Hello World')
-        #layout.add_widget(btn)
 
         #mwiget = Widget()
         #mwiget.height
