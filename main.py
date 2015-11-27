@@ -6,22 +6,25 @@ from kivy.graphics import Rectangle, Color #, Canvas
 
 
 class PG(Widget):
-    def __init__(self, d=10, *args, **kwargs):
-        Widget.__init__(self, *args, **kwargs)
-        self.d = d
+#    def __init__(self, d=10, *args, **kwargs):
+#        Widget.__init__(self, *args, **kwargs)
+#        self.d = d
 
-    def on_touch_down(self, touch):
+    def fill(self):
+        pass
+
+    def on_touch_up(self, touch):
         color = (random(), random(), random())
         with self.canvas:
             Color(*color)
-            Rectangle(pos=(self.center_x - self.d/2, self.center_y - self.d/2), size=(self.d,self.d))
+            #Rectangle(pos=(self.center_x - self.d/2, self.center_y - self.d/2), size=(self.d,self.d))
             #Rectangle(pos=(0, 0), size=(self.d,self.d))
             #Rectangle(pos=(self.width-self.d/2, self.height-self.d/2), size=(self.d,self.d))
       
 
 class PylotsGameApp(App):
     def build(self):
-        mwiget = AnchorLayout()
+        mwiget = AnchorLayout(size=(300, 300))
         #btn = Button(text='Hello World')
         #layout.add_widget(btn)
 
@@ -29,10 +32,10 @@ class PylotsGameApp(App):
         #mwiget.height
         #mwiget.canvas = Canvas(size = (300, 300), pos = (50, 50) )
 
-        n1 = PG(200)
-        n2 = PG(100)
-        mwiget.add_widget(n1)
-        mwiget.add_widget(n2)
+        #n1 = PG(200)
+        #n2 = PG(100)
+        #mwiget.add_widget(n1)
+        #mwiget.add_widget(n2)
         return mwiget
 
 
