@@ -1,0 +1,27 @@
+#:kivy 1.9.0
+
+<PG>:
+    size: root.fieldSize, root.fieldSize + 50
+    pos: self.pos
+
+    Button:
+        font_size: 12
+        center_x: root.center_x
+        top: root.top - 5
+        text: "New"
+        height: 25
+        on_press: root.onbuttonpress()
+
+    Label:
+        font_size: 24
+        center_x: root.center_x
+        top: root.top - 5
+        text: str(root.count)
+
+
+<GameDesk>:
+    pg: p_g
+
+    PG:
+        id: p_g
+        center: root.center
