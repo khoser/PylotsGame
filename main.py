@@ -12,18 +12,12 @@ from PylotsGame_class import PylotMap_class
 class PG(Widget):
 
     count = NumericProperty(0)
-    fieldSize = NumericProperty(300)
-
-#    def __init__(self, d=10, *args, **kwargs):
-#        Widget.__init__(self, *args, **kwargs)
-#        self.d = d
+    fieldSize = NumericProperty(0)
 
     def fill(self,size,colortop,colorbottom,fieldSize):
         self.PM = PylotMap_class(size,colortop,colorbottom)
-        self.fieldSize = fieldSize + 1
-        self.squareSize = fieldSize / size - 1
-        self.x_clarif = 0
-        self.y_clarif = 0
+        self.fieldSize = fieldSize
+        self.squareSize = (self.fieldSize - size -1) * 1.0 / size
 
 
     def newgame(self):
@@ -34,24 +28,26 @@ class PG(Widget):
 
 
     def redraw(self):
+        self.canvas.clear()
         with self.canvas:
+
             Color(1,1,1)
-            Rectangle(pos=(-self.x_clarif, -self.y_clarif), size=(self.fieldSize,self.fieldSize))
+            Rectangle(pos=(0, 0), size=(self.fieldSize,self.fieldSize))
             for i in self.PM.matr:
                 for j in i:
                     Color(*j.color)
-                    Rectangle(pos=(1+j.xplace * (self.squareSize + 1)-self.x_clarif, 1+j.yplace * (self.squareSize + 1)-self.y_clarif), size=(self.squareSize,self.squareSize))
+                    Rectangle(pos=(1+j.xplace * (self.squareSize + 1), 1+j.yplace * (self.squareSize + 1)), size=(self.squareSize,self.squareSize))
 
     def findxplace(self, x):
         for i in range(self.PM.size):
-            if 1 + self.PM.matr[i][i].xplace * (self.squareSize + 1) - self.x_clarif < x < 1 + self.PM.matr[i][i].xplace * (self.squareSize + 1) + self.squareSize - self.x_clarif:
+            if 1 + self.PM.matr[i][i].xplace * (self.squareSize + 1) < x < 1 + self.PM.matr[i][i].xplace * (self.squareSize + 1) + self.squareSize:
                 return self.PM.matr[i][i].xplace
         return -1
 
 
     def findyplace(self, y):
         for i in range(self.PM.size):
-            if 1 + self.PM.matr[i][i].yplace * (self.squareSize + 1) - self.y_clarif < y < 1 + self.PM.matr[i][i].yplace * (self.squareSize + 1) + self.squareSize - self.y_clarif:
+            if 1 + self.PM.matr[i][i].yplace * (self.squareSize + 1) < y < 1 + self.PM.matr[i][i].yplace * (self.squareSize + 1) + self.squareSize:
                 return self.PM.matr[i][i].yplace
         return -1
 
@@ -67,35 +63,38 @@ class PG(Widget):
             self.makesometext()
 
     def makesometext(self):
-        print("You won!")
+        self.lbl.text = "You won! {0}".format(self.count)
 
 
-    def onbuttonpress(self):
+    def onbuttonpress(self,lbl,txt):
+        self.lbl = lbl
 
         colortop = (random(), random(), random())
         colorbottom = (random(), random(), random())
 
-        fieldSize = 300
-        fieldnum = 4
+        fieldSize = self.parent.width
 
-        self.fill(fieldnum,colortop,colorbottom,fieldSize)
+        self.fill(int(txt.text),colortop,colorbottom,fieldSize)
         self.newgame()
 
 
 class GameDesk(Widget):
+
     pg = ObjectProperty(None)
 
+    def __init__(self,**kwargs):
+        super(GameDesk, self).__init__(**kwargs)
+        self.size_hint_x = 1.0
+
     def onbuttonpress(self):
-        self.pg.onbuttonpress()
+        self.pg.onbuttonpress(self.ids.lbl, self.ids.txtinp)
 
 
 class PylotsGameApp(App):
     def build(self):
 
         game = GameDesk()
-
         game.onbuttonpress()
-
 
         return game
 
